@@ -1,0 +1,140 @@
+:root{
+  --nav-h: 66px;        /* JS로 실제값 덮어씌울 수 있음 */
+  --footer-h: 60px;     /* JS로 실제값 덮어씌울 수 있음 */
+  --brand: #e83e8c;
+  --brand-dark: #d63384;
+}
+
+
+/* 기본 여백 제거 */
+html, body { margin: 0; padding: 0; }
+
+/* fixed-top 기본 페이지는 헤더만큼 내려줌 */
+body { padding-top: var(--nav-h); }
+
+/* ================= Brand Buttons ================= */
+.btn-brand{
+  background-color: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+  font-weight: 600;
+}
+.btn-brand:hover{
+  background-color: var(--brand-dark);
+  border-color: var(--brand-dark);
+  color: #fff;
+}
+.btn-brand-outline{
+  border: 2px solid var(--brand);
+  color: var(--brand);
+  background: #fff;
+  font-weight: 600;
+}
+.btn-brand-outline:hover{
+  background-color: var(--brand);
+  color: #fff;
+}
+
+/* ================= Navbar ================= */
+.navbar-hero{
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(6px);
+  transition: background .25s ease, box-shadow .25s ease;
+}
+.navbar-hero.is-transparent{
+  background: transparent;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+.navbar-hero.is-transparent .nav-link,
+.navbar-hero.is-transparent .navbar-text{
+  text-shadow: 0 2px 10px rgba(0,0,0,0.35);
+}
+
+
+/* ================= Hero ================= */
+/* 메인(hero)에서만 헤더와 겹치게 */
+.hero-overlap{
+  margin-top: calc(-1 * var(--nav-h));
+}
+
+/* 🔥 핵심: 부모부터 높이를 전달 */
+.hero-full{
+  position: relative;
+  height: calc(100dvh - var(--footer-h));
+  min-height: calc(100dvh - var(--footer-h));
+  padding-top: var(--nav-h);
+  overflow: hidden;
+}
+
+.hero-full::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:120px;
+  background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.08));
+  pointer-events:none;
+}
+
+
+main{
+  padding: 0;
+  background: transparent;
+}
+
+
+
+.hero-full #heroSlider,
+.hero-full .carousel-inner,
+.hero-full .carousel-item{
+  height: 100%;
+}
+
+/* ✅ 이미지는 부모 높이를 그대로 사용 (계산 X, 100%만) */
+.hero-full .hero-img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 캡션 중앙 */
+.hero-caption{
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  text-align: center;
+}
+
+.hero-caption h1{
+  color: #fff;
+  font-size: 5rem;
+  font-weight: 800;
+  text-shadow: 0 8px 30px rgba(0,0,0,0.7);
+}
+
+@media (max-width: 768px){
+  .hero-caption h1{ font-size: 2.5rem; }
+}
+/* ===== 브랜드 유틸(마이페이지/게시판/성적 화면에서 사용) ===== */
+.brand-gradient{
+  background: linear-gradient(90deg, var(--brand), #ff7ab0) !important;
+}
+
+.bg-brand{
+  background-color: var(--brand) !important;
+}
+
+.text-brand{
+  color: var(--brand-dark) !important;
+}
+
+/* ================= Footer ================= */
+.site-footer{
+  margin: 0;
+}
+

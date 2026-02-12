@@ -1,0 +1,53 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="container">
+  <div class="d-flex justify-content-center align-items-center"
+       style="min-height: 75vh;">
+
+    <div class="col-md-4">
+      <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-4">
+
+          <h3 class="text-center mb-4 fw-bold text-brand">회원가입</h3>
+            <form action="{{ url_for('member.join') }}" method="POST">
+
+            <div class="mb-3">
+              <label class="form-label">아이디</label>
+              <input type="text" name="uid" class="form-control"
+                     placeholder="사용할 아이디 입력" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">비밀번호</label>
+              <input type="password" name="password" class="form-control"
+                     placeholder="비밀번호 입력" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">이름</label>
+              <input type="text" name="name" class="form-control"
+                     placeholder="실명 입력" required>
+            </div>
+                <div class="mb-3">
+              <label class="form-label">이메일</label>
+              <input type="email" name="email" class="form-control"
+                     placeholder="example@email.com">
+            </div>
+
+            <button type="submit" class="btn btn-brand w-100">회원가입</button>
+          </form>
+              <div class="mt-3 text-center">
+                <a href="{{ url_for('member.login') }}"
+                   class="btn btn-brand-outline w-100">
+                  이미 계정이 있으신가요? 로그인
+                </a>
+              </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

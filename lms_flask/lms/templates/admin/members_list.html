@@ -1,0 +1,114 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container" style="padding-top: 90px; padding-bottom: 40px;">
+
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+    <div>
+      <h3 class="mb-0 fw-bold">관리자 · 회원 목록</h3>
+      <small class="text-muted">
+        {% if mode == "active" %}활성 회원만{% elif mode == "inactive" %}비활성(블랙리스트)만{% else %}전체{% endif %}
+        보기
+      </small>
+    </div>
+
+    <div class="d-flex gap-2">
+      <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('member.admin_members') }}">전체</a>
+      <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('member.admin_members_active') }}">활성</a>
+      <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('member.admin_members_inactive') }}">비활성</a>
+    </div>
+  </div>
+
+  {# flash 메시지 출력(있으면) #}
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="alert alert-info">
+        {{ messages[0] }}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th style="width:80px;">ID</th>
+              <th style="width:140px;">프로필</th>
+              <th>아이디</th>
+              <th>이름</th>
+              <th>이메일</th>
+              <th style="width:120px;">권한</th>
+              <th style="width:120px;">상태</th>
+              <th style="width:140px;" class="text-end">관리</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% if members and members|length > 0 %}
+              {% for m in members %}
+              <tr>
+                <td class="fw-semibold">{{ m.id }}</td>
+
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    {% if m.profile_img %}
+                      <img src="{{ url_for('static', filename='uploads/profile/' ~ m.profile_img) }}"
+                           alt="profile"
+                           style="width:36px;height:36px;object-fit:cover;border-radius:50%;">
+                    {% else %}
+                      <div style="width:36px;height:36px;border-radius:50%;background:#eee;
+                                  display:flex;align-items:center;justify-content:center;">
+                        <span>👤</span>
+                      </div>
+                    {% endif %}
+                    <span class="text-muted small">#{{ m.id }}</span>
+                  </div>
+                </td>
+
+                <td>{{ m.uid }}</td>
+                <td>{{ m.name }}</td>
+                <td>{{ m.email or '-' }}</td>
+
+                <td>
+                  {% if m.role == 'admin' %}
+                    <span class="badge bg-danger">ADMIN</span>
+                  {% elif m.role == 'manager' %}
+                    <span class="badge bg-warning text-dark">MANAGER</span>
+                  {% else %}
+                    <span class="badge bg-secondary">USER</span>
+                  {% endif %}
+                </td>
+
+                <td>
+                  {% if m.active %}
+                    <span class="badge bg-success">활성</span>
+                  {% else %}
+                    <span class="badge bg-dark">비활성</span>
+                  {% endif %}
+                </td>
+
+                <td class="text-end">
+                  <a class="btn btn-sm btn-outline-primary"
+                     href="{{ url_for('member.admin_member_detail', member_id=m.id) }}">
+                    상세
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="8" class="text-center text-muted py-5">
+                  회원이 없습니다.
+                </td>
+              </tr>
+            {% endif %}
+          </tbody>
+
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

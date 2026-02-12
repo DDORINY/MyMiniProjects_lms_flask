@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="container-fluid px-0 hero-full hero-overlap">
+
+  <div id="heroSlider" class="carousel slide h-100" data-bs-ride="carousel">
+    <div class="carousel-inner h-100">
+
+      <div class="carousel-item active h-100">
+        <img src="{{ url_for('static', filename='img/slide1.jpg') }}"
+             class="d-block w-100 hero-img" alt="slide1">
+
+        <div class="carousel-caption hero-caption text-center">
+          <h1 class="fw-bold display-1">MBC Academy <br>LMS Program</h1>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}
