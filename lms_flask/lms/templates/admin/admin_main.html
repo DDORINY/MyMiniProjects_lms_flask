@@ -1,0 +1,155 @@
+{% extends "admin/layout_admin.html" %}
+{% block content %}
+
+{% set student = stats.student %}
+
+<style>
+  .admin-card{
+    min-height: 340px;
+    border-radius: 16px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+  }
+</style>
+
+<div class="row g-4 align-items-stretch">
+
+  <!-- 학생관리 -->
+  <div class="col-lg-3 col-md-6">
+    <div class="card admin-card feature-card h-100 p-4 d-flex flex-column justify-content-center">
+
+
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="mb-0 fw-bold">학생관리</h5>
+        <a href="{{ url_for('admin.members_list') }}" class="small text-decoration-none">관리</a>
+      </div>
+
+      <div class="d-flex gap-3 align-items-center justify-content-center h-100">
+        <div style="width:130px;height:130px;">
+          <canvas id="studentDonut"></canvas>
+        </div>
+
+        <div class="small">
+          <div class="mb-2">
+            <span class="badge bg-success me-2">활성</span>
+            {{ student.active }}명
+          </div>
+          <div class="mb-2">
+            <span class="badge bg-danger me-2">차단</span>
+            {{ student.blocked }}명
+          </div>
+          <div>
+            <span class="badge bg-primary me-2">신규(30일)</span>
+            {{ student.new_30d }}명
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 교수관리 -->
+  <div class="col-lg-3 col-md-6">
+    <div class="card admin-card feature-card h-100 p-4">
+      <h5 class="mb-3 fw-bold">교수관리</h5>
+
+      <div class="d-grid gap-2">
+        <a class="btn btn-outline-primary" href="{{ url_for('admin.professors_list') }}">교수 목록</a>
+        <a class="btn btn-outline-primary" href="{{ url_for('admin.professor_by_lecture') }}">강의별 담당 교수</a>
+        <a class="btn btn-outline-primary" href="{{ url_for('admin.professor_popular') }}">인기 교수</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 강의관리 -->
+  <div class="col-lg-3 col-md-6">
+    <div class="card admin-card feature-card h-100 p-4">
+
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="mb-0 fw-bold">강의관리</h5>
+        <a href="{{ url_for('admin.lectures_list') }}" class="small text-decoration-none">전체보기</a>
+      </div>
+
+      <ul class="list-group list-group-flush mt-2">
+        {% for lec in lectures_rank %}
+          <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge bg-light text-dark">{{ lec.rank }}</span>
+              <span class="fw-semibold">{{ lec.title }}</span>
+            </div>
+
+            <div class="d-flex align-items-center gap-2 small">
+              <span class="text-muted">{{ lec.students }}명</span>
+
+              {% if lec.delta > 0 %}
+                <span class="badge bg-success">▲ {{ lec.delta }}</span>
+              {% elif lec.delta < 0 %}
+                <span class="badge bg-danger">▼ {{ (-lec.delta) }}</span>
+              {% else %}
+                <span class="badge bg-secondary">-</span>
+              {% endif %}
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+
+    </div>
+  </div>
+
+  <!-- 성적관리 -->
+  <div class="col-lg-3 col-md-6">
+    <div class="card admin-card feature-card h-100 p-4">
+
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h5 class="mb-0 fw-bold">성적관리</h5>
+        <a href="{{ url_for('admin.scores_overview') }}" class="small text-decoration-none">관리</a>
+      </div>
+
+      <div class="table-responsive mt-2">
+        <table class="table table-sm align-middle mb-0">
+          <thead>
+            <tr class="text-muted">
+              <th style="width:60px;">등수</th>
+              <th>학생</th>
+              <th class="text-end">점수</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for r in recent_exam_rank %}
+              <tr>
+                <td><span class="badge bg-dark">{{ r.rank }}</span></td>
+                <td>{{ r.name }}</td>
+                <td class="text-end fw-semibold">{{ r.score }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<br><hr><br>
+
+<div class="row g-4 align-items-stretch">
+  <div class="col-lg-9 col-md-6">
+    <div class="card admin-card h-100 p-4">
+      <h5><strong>게시판관리</strong></h5>
+    </div>
+  </div>
+
+  <div class="col-lg-3 col-md-6">
+    <div class="card admin-card h-100 p-4">
+      <h5><strong>문의글관리</strong></h5>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer border-top bg-white py-3 mt-4">
+  <div class="container text-center small text-muted">
+    © 2026 MBC Academy LMS
+  </div>
+</footer>
+
+{% endblock %}

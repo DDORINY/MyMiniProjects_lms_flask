@@ -1,5 +1,5 @@
 import pymysql
-from config import Config
+from lms.config import Config
 
 def get_connection():
     return pymysql.connect(

@@ -1,6 +1,6 @@
 from typing import Optional, List
-from common.db import get_connection
-from domain.Member import Member
+from lms.common.db import get_connection
+from lms.domain.Member import Member
 
 class MemberRepo:
 # [v] find_by_uid(uid) (로그인)
@@ -78,8 +78,9 @@ class MemberRepo:
                 VALUES(%s,%s,%s,%s,%s,1)
                 """
                 cursor.execute(sql, (uid, password, name, email, role))
+                new_id = cursor.lastrowid
             conn.commit()
-            return cursor.lastrowid
+            return new_id
         finally:
             conn.close()
 

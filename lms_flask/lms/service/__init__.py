@@ -1,4 +1,4 @@
-from service.MemberService import MemberService
-from service.BoardService import BoardService
+from lms.service.MemberService import MemberService
 
-__all__ = ['MemberService','BoardService']
+
+__all__ = ['MemberService']

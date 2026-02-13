@@ -1,4 +1,4 @@
-from repositories.member_repo import MemberRepo
+from lms.repositories.member_repo import MemberRepo
 
 class AuthService:
     @staticmethod

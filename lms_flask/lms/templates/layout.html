@@ -23,67 +23,39 @@
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item"><a class="nav-link" href="{{ url_for('main.index') }}">Home</a></li>
           <li class="nav-item"><a class="nav-link" href="{{ url_for('board.board_list') }}">Board</a></li>
-          {% if session.get('role') in ['admin', 'manager'] %}
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle"
-               href="#"
-               role="button"
-               data-bs-toggle="dropdown"
-               aria-expanded="false">
-              Admin
-            </a>
-
-            <ul class="dropdown-menu">
-              <li>
-                <a class="dropdown-item" href="{{ url_for('member.admin_members') }}">
-                  회원 전체
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="{{ url_for('member.admin_members_active') }}">
-                  활성 회원
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="{{ url_for('member.admin_members_inactive') }}">
-                  비활성/블랙리스트
-                </a>
-              </li>
-            </ul>
-          </li>
-        {% endif %}
-
+          {% if session.get('role') =='admin' %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.dashboard') }}">Admin page</a></li>
+          {% endif %}
         </ul>
 
         <div class="d-flex gap-2 align-items-center">
           {% if session.get('user_id') %}
-  <a href="{{ url_for('member.mypage') }}"
-     class="d-flex align-items-center gap-2 text-decoration-none text-dark">
+            <a href="{{ url_for('member.mypage') }}"
+               class="d-flex align-items-center gap-2 text-decoration-none text-dark">
 
-    {% if session.get('profile_img') %}
-      <img
-        src="{{ url_for('static', filename='uploads/profile/' ~ session.get('profile_img')) }}"
-        alt="profile"
-        style="width:32px;height:32px;object-fit:cover;border-radius:50%;"
-      >
-    {% else %}
-      <div style="width:32px;height:32px;border-radius:50%;background:#eee;
-                  display:flex;align-items:center;justify-content:center;">
-        <span style="font-size:14px;">👤</span>
-      </div>
-    {% endif %}
+              {% if session.get('profile_img') %}
+                <img src="{{ url_for('static', filename='uploads/profile/' ~ session.get('profile_img')) }}"
+                     alt="profile"
+                     style="width:32px;height:32px;object-fit:cover;border-radius:50%;">
+              {% else %}
+                <div style="width:32px;height:32px;border-radius:50%;background:#eee;
+                            display:flex;align-items:center;justify-content:center;">
+                  <span style="font-size:14px;">👤</span>
+                </div>
+              {% endif %}
 
-    <span class="navbar-text">{{ session.get('user_name') }}님</span>
-  </a>
+              <span class="navbar-text">{{ session.get('user_name') }}님</span>
+            </a>
 
-  <a class="btn btn-brand-outline" href="{{ url_for('member.mypage') }}">마이페이지</a>
-  <a class="btn btn-brand" href="{{ url_for('member.logout') }}">로그아웃</a>
-{% else %}
+            <a class="btn btn-brand-outline" href="{{ url_for('member.mypage') }}">마이페이지</a>
+            <a class="btn btn-brand" href="{{ url_for('member.logout') }}">로그아웃</a>
 
+          {% else %}
             <a class="btn btn-brand-outline" href="{{ url_for('member.login') }}">로그인</a>
             <a class="btn btn-brand" href="{{ url_for('member.join') }}">회원가입</a>
           {% endif %}
         </div>
+
       </div>
     </div>
   </nav>

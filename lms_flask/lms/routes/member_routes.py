@@ -4,9 +4,9 @@ import uuid
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash, current_app
 from werkzeug.utils import secure_filename
 
-from common.auth import Auth
-from service.AuthService import AuthService
-from service.MemberService import MemberService
+from lms.common.auth import Auth
+from lms.service.AuthService import AuthService
+from lms.service.MemberService import MemberService
 
 bp = Blueprint("member", __name__)
 
@@ -77,12 +77,12 @@ def join():
         return render_template("member/join.html")
 
     uid = request.form.get("uid", "")
-    pw = request.form.get("password", "")
+    password = request.form.get("password", "")
     name = request.form.get("name", "")
     email = request.form.get("email", "").strip() or None  # 템플릿에서 없으면 "" 들어옴
 
     try:
-        member = MemberService.join(uid, pw, name, email=email or None)
+        member = MemberService.join(uid, password, name, email=email or None)
 
         # 가입 후 자동 로그인
         session["user_id"] = member.id
@@ -221,75 +221,3 @@ def upload_profile():
     return redirect(url_for("member.mypage"))
 
 
-# ----------------------------
-# ADMIN: Members
-# ----------------------------
-def admin_guard():
-    if not Auth.is_login() or not Auth.is_admin():
-        flash("권한이 없습니다.")
-        return False
-    return True
-
-
-@bp.route("/admin/members")
-def admin_members():
-    if not admin_guard():
-        return redirect(url_for("main.index"))
-
-    members = MemberService.list_members(active=None)
-    return render_template("admin/members_list.html", members=members, mode="all")
-
-
-@bp.route("/admin/members/active")
-def admin_members_active():
-    if not admin_guard():
-        return redirect(url_for("main.index"))
-
-    members = MemberService.list_members(active=True)
-    return render_template("admin/members_list.html", members=members, mode="active")
-
-
-@bp.route("/admin/members/inactive")
-def admin_members_inactive():
-    if not admin_guard():
-        return redirect(url_for("main.index"))
-
-    members = MemberService.list_members(active=False)
-    return render_template("admin/members_list.html", members=members, mode="inactive")
-
-
-@bp.route("/admin/members/<int:member_id>")
-def admin_member_detail(member_id: int):
-    if not admin_guard():
-        return redirect(url_for("main.index"))
-
-    try:
-        member = MemberService.get_member_detail(member_id)
-        return render_template("admin/member_detail.html", user=member)
-    except ValueError as e:
-        flash(str(e))
-        return redirect(url_for("member.admin_members"))
-
-
-@bp.route("/admin/members/<int:member_id>/active", methods=["POST"])
-def admin_member_toggle_active(member_id: int):
-    if not admin_guard():
-        return redirect(url_for("main.index"))
-
-    # active 값을 폼에서 받거나, 현재 상태를 보고 토글하는 방식 둘 다 가능
-    # 여기선 폼 값이 있으면 그걸 우선 사용
-    active_str = request.form.get("active")  # '1' or '0' 기대
-    try:
-        if active_str is None:
-            # 폼이 없으면 현재 상태를 보고 토글
-            member = MemberService.get_member_detail(member_id)
-            new_active = not member.active
-        else:
-            new_active = True if active_str == "1" else False
-
-        MemberService.set_blacklist(member_id, active=new_active)
-        flash("회원 상태가 변경되었습니다.")
-        return redirect(url_for("member.admin_member_detail", member_id=member_id))
-    except ValueError as e:
-        flash(str(e))
-        return redirect(url_for("member.admin_members"))

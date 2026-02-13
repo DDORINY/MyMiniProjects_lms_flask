@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MBC ADMIN Program</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+<style>
+
+body {
+  margin:0;
+  background:#f5f6fa;
+}
+
+.sidebar {
+  width:240px;
+  height:100vh;
+  position:fixed;
+  left:0;
+  top:0;
+  background:white;
+  border-right:1px solid #eee;
+  padding:20px;
+}
+
+.logo {
+  font-weight:700;
+  font-size:20px;
+  margin-bottom:30px;
+}
+
+.nav-item {
+  display:block;
+  padding:10px;
+  border-radius:8px;
+  color:#444;
+  text-decoration:none;
+  margin-bottom:5px;
+}
+
+.nav-item:hover {
+  background:#eef3ff;
+}
+
+.nav-item.active {
+  background:#dbe4ff;
+  font-weight:600;
+}
+
+.topbar {
+  margin-left:240px;
+  height:70px;
+  background:white;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 30px;
+  border-bottom:1px solid #eee;
+}
+
+.search {
+  width:320px;
+  border-radius:20px;
+  border:1px solid #ddd;
+  padding:8px 15px;
+}
+
+.topbar-right {
+  display:flex;
+  gap:20px;
+  align-items:center;
+}
+
+.profile img {
+  width:36px;
+  height:36px;
+  border-radius:50%;
+}
+
+.content {
+  margin-left:240px;
+  padding:30px;
+}
+
+.stat-card {
+  background:white;
+  padding:20px;
+  border-radius:14px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.05);
+}
+.nav-item {
+    display:block;
+    padding:10px 14px;
+    border-radius:10px;
+    color:#333;
+    text-decoration:none;
+
+    transition: transform 0.18s ease,
+                box-shadow 0.18s ease,
+                background 0.18s ease;
+}
+
+.nav-item:hover {
+    transform: translateX(6px);   /* 👉 옆으로 살짝 이동 */
+    background:#eef3ff;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <img src="{{ url_for('static', filename='img/logo.png') }}" width="100" height="40">
+  <br>
+  <hr>
+
+    <a href="{{ url_for('admin.dashboard') }}" class="nav-item active">
+    Dashboard
+    </a>
+  <hr>
+  <a class="nav-item">회원관리</a>
+  <a class="nav-item">교수관리</a>
+  <a class="nav-item">강의관리</a>
+  <a class="nav-item">게시판</a>
+</div>
+
+<!-- Topbar -->
+<div class="topbar">
+  <input class="search" placeholder="회원 / 강의 / 게시글 검색">
+
+  <div class="topbar-right">
+    <i class="bi bi-bell"></i>
+
+    <div class="profile">
+      <a href="{{ url_for('member.mypage') }}"
+         class="profile-link text-dark text-decoration-none">
+      {% if session.get('profile_img') %}
+      <img
+        src="{{ url_for('static', filename='uploads/profile/' ~ session.get('profile_img')) }}"
+        alt="profile"
+        style="width:32px;height:32px;object-fit:cover;border-radius:50%;">
+    {% else %}
+      <div style="width:32px;height:32px;border-radius:50%;background:#eee;
+                  display:flex;align-items:center;justify-content:center;">
+        <span style="font-size:14px;">👤</span>
+      </div>
+    {% endif %}
+      <span class="navbar-text">{{ session.get('user_name') }}님</span></a>
+
+    </div>
+  </div>
+</div>
+
+<!-- Content -->
+<div class="content">
+  {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  {% set student = (stats.student if stats is defined and stats.student is defined else {"total":0,"active":0,"blocked":0,"new_30d":0}) %}
+  const studentData = {{ student|tojson }};
+  const ctx = document.getElementById('studentDonut');
+
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['활성', '차단'],
+      datasets: [{
+        data: [studentData.active, studentData.blocked],
+        borderWidth: 0
+      }]
+    },
+    options: {
+      cutout: '70%',
+      plugins: { legend: { display: false } }
+    }
+  });
+</script>

@@ -1,6 +1,6 @@
 from typing import Optional, List
-from repositories.member_repo import MemberRepo
-from domain.Member import Member
+from lms.repositories.member_repo import MemberRepo
+from lms.domain.Member import Member
 
 class MemberService:
 

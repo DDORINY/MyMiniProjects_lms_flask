@@ -1,4 +1,4 @@
-from domain.Member import Member
-from domain.Board import Board
+from lms.domain.Member import Member
+from lms.domain.Board import Board
 
 __all__ = ['Member','Board']
